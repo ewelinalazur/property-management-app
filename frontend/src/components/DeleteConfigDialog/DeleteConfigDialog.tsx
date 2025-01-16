@@ -5,8 +5,8 @@ import {
   DialogContentText,
   DialogTitle,
   Button,
-} from "@mui/material";
-import { DeleteConfirmDialogProps } from "./DeleteConfigDialog.types";
+} from '@mui/material';
+import { DeleteConfirmDialogProps } from './DeleteConfigDialog.types';
 
 const DeleteConfirmDialog: React.FC<DeleteConfirmDialogProps> = ({
   open,

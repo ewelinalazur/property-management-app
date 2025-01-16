@@ -1,26 +1,23 @@
-import { useState, useMemo, useEffect } from "react";
-import { useQuery, useLazyQuery, useMutation } from "@apollo/client";
-import debounce from "lodash/debounce";
-import { GET_PROPERTIES, GET_PROPERTY } from "../graphql/queries";
-import { useNotification } from "../context/NotificationContext";
-import { CREATE_PROPERTY, DELETE_PROPERTY } from "../graphql/mutations";
+import { useState, useEffect } from 'react';
+import { useQuery, useLazyQuery, useMutation } from '@apollo/client';
+import { GET_PROPERTIES, GET_PROPERTY } from '../graphql/queries';
+import { useNotification } from '../context/NotificationContext';
+import { CREATE_PROPERTY, DELETE_PROPERTY } from '../graphql/mutations';
+import useDebounce from './useDebounce';
+import { Property } from '../components/Table/Table.types';
 
-type Filter = {
-  city: string;
-  state: string;
-  street: string;
-  zipCode: string;
-};
+export type Filter = Pick<Property, 'city' | 'street' | 'state' | 'zipCode'>;
 
 const usePropertyDashboard = () => {
   const [openSidebar, setOpenSidebar] = useState(false);
-  const [sortOrder, setSortOrder] = useState<"ASC" | "DESC">("DESC");
+  const [sortOrder, setSortOrder] = useState<'ASC' | 'DESC'>('DESC');
   const [filter, setFilter] = useState<Filter>({
-    city: "",
-    state: "",
-    street: "",
-    zipCode: "",
+    city: '',
+    state: '',
+    street: '',
+    zipCode: '',
   });
+  const debouncedSearch = useDebounce(filter, 200);
   const [selectedProperty, setSelectedProperty] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
@@ -29,7 +26,7 @@ const usePropertyDashboard = () => {
   const { showSuccess, showError } = useNotification();
 
   const { data, loading, error } = useQuery(GET_PROPERTIES, {
-    variables: { sortOrder, filter },
+    variables: { sortOrder, filter: debouncedSearch },
   });
 
   const [property, { data: propertyData }] = useLazyQuery(GET_PROPERTY);
@@ -38,7 +35,7 @@ const usePropertyDashboard = () => {
       { query: GET_PROPERTIES, variables: { sortOrder, filter } },
     ],
     onCompleted: () => {
-      showSuccess("Property deleted successfully!");
+      showSuccess('Property deleted successfully!');
       setOpenDialog(false);
       setSelectedItem(null);
     },
@@ -53,7 +50,7 @@ const usePropertyDashboard = () => {
       { query: GET_PROPERTIES, variables: { sortOrder, filter } },
     ],
     onCompleted: () => {
-      showSuccess("Property added successfully!");
+      showSuccess('Property added successfully!');
       handleCloseSidebar();
     },
     onError: (error) => {
@@ -65,24 +62,16 @@ const usePropertyDashboard = () => {
   const handleCloseSidebar = () => setOpenSidebar(false);
 
   const handleSortClick = () => {
-    setSortOrder((prevOrder) => (prevOrder === "ASC" ? "DESC" : "ASC"));
+    setSortOrder((prevOrder) => (prevOrder === 'ASC' ? 'DESC' : 'ASC'));
   };
-
-  const debouncedSetFilter = useMemo(
-    () =>
-      debounce((newFilter: Partial<Filter>) => {
-        setFilter((prev) => ({ ...prev, ...newFilter }));
-      }, 300),
-    []
-  );
 
   const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    debouncedSetFilter({ [name]: value });
+    setFilter((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleResetFilters = () => {
-    setFilter({ city: "", street: "", state: "", zipCode: "" });
+    setFilter({ city: '', street: '', state: '', zipCode: '' });
   };
 
   const handleRowClick = (propertyId: string) => {
@@ -114,12 +103,6 @@ const usePropertyDashboard = () => {
       setSelectedProperty(propertyData.property);
     }
   }, [propertyData]);
-
-  useEffect(() => {
-    return () => {
-      debouncedSetFilter.cancel();
-    };
-  }, [debouncedSetFilter]);
 
   return {
     openSidebar,

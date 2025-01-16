@@ -1,7 +1,7 @@
-import Container from "@mui/material/Container";
-import PropertyDashboard from "./pages/dashboard/Dashboard";
-import { NotificationProvider } from "./context/NotificationContext";
-import { Header } from "./components/custom/Header/Header";
+import Container from '@mui/material/Container';
+import PropertyDashboard from './pages/dashboard/Dashboard';
+import { NotificationProvider } from './context/NotificationContext';
+import { Header } from './components/custom/Header/Header';
 
 const App = () => {
   return (

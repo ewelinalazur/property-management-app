@@ -1,10 +1,9 @@
-import TableComponent from "../../components/Table/Table";
-import { Box, Button, TextField, Typography } from "@mui/material";
-import { StyledTextWrapper } from "./Dashboard.styles";
-import AddPropertySidebar from "../../components/AddPropertySidebar/AddPropertySidebar";
-import PropertyDetailsModal from "../../components/PropertyDetailsModal/PropertyDetailsModal";
-import DeleteConfirmDialog from "../../components/DeleteConfigDialog/DeleteConfigDialog";
-import usePropertyDashboard from "../../hooks/usePropertyDashboard";
+import TableComponent from '../../components/Table/Table';
+import { Box, Button, TextField, Typography } from '@mui/material';
+import AddPropertySidebar from '../../components/AddPropertySidebar/AddPropertySidebar';
+import PropertyDetailsModal from '../../components/PropertyDetailsModal/PropertyDetailsModal';
+import DeleteConfirmDialog from '../../components/DeleteConfigDialog/DeleteConfigDialog';
+import usePropertyDashboard from '../../hooks/usePropertyDashboard';
 
 const PropertyDashboard = () => {
   const {
@@ -32,18 +31,18 @@ const PropertyDashboard = () => {
 
   return (
     <>
-      <StyledTextWrapper>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
         <Typography variant="h5" gutterBottom>
-          Property Managment
+          Property Management
         </Typography>
         <Button variant="contained" onClick={handleOpenSidebar}>
           ADD PROPERTY
         </Button>
-      </StyledTextWrapper>
+      </Box>
 
       <Box
         sx={{
-          backgroundColor: "#fff",
+          backgroundColor: '#fff',
           padding: 2,
           borderRadius: 2,
           boxShadow: 1,
@@ -62,7 +61,7 @@ const PropertyDashboard = () => {
           <TextField
             label="Street"
             variant="outlined"
-            value={filter.zipCode}
+            value={filter.street}
             onChange={handleFilterChange}
             name="street"
             size="small"

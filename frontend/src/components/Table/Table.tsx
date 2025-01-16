@@ -1,25 +1,24 @@
-import * as React from "react";
-import Paper from "@mui/material/Paper";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TablePagination from "@mui/material/TablePagination";
-import TableRow from "@mui/material/TableRow";
-import { TableComponentProps } from "./Table.types";
+import * as React from 'react';
+import Paper from '@mui/material/Paper';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TablePagination from '@mui/material/TablePagination';
+import TableRow from '@mui/material/TableRow';
+import { TableComponentProps } from './Table.types';
 import {
   Button,
   CircularProgress,
   TableSortLabel,
   Typography,
-} from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { columns } from "./TableColumns";
+} from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { columns } from './TableColumns';
 
 const TableComponent: React.FC<TableComponentProps> = ({
   rows,
-
   loading,
   error,
   onSortClick,
@@ -43,14 +42,14 @@ const TableComponent: React.FC<TableComponentProps> = ({
   };
 
   const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
   return (
     <>
-      <Paper sx={{ width: "100%", overflow: "hidden" }}>
+      <Paper sx={{ width: '100%', overflow: 'hidden' }}>
         <TableContainer sx={{ maxHeight: 440 }}>
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
@@ -61,10 +60,10 @@ const TableComponent: React.FC<TableComponentProps> = ({
                     align={column.align}
                     style={{ minWidth: column.minWidth }}
                   >
-                    {column.id === "createdAt" ? (
+                    {column.id === 'createdAt' ? (
                       <TableSortLabel
                         active
-                        direction={sortOrder === "ASC" ? "asc" : "desc"}
+                        direction={sortOrder === 'ASC' ? 'asc' : 'desc'}
                         onClick={onSortClick}
                       >
                         {column.label}
@@ -94,6 +93,7 @@ const TableComponent: React.FC<TableComponentProps> = ({
                       <TableRow
                         hover
                         role="checkbox"
+                        style={{ cursor: 'pointer' }}
                         tabIndex={-1}
                         key={String(row._id)}
                         onClick={() =>
@@ -104,7 +104,7 @@ const TableComponent: React.FC<TableComponentProps> = ({
                           const value = row[column.id];
                           return (
                             <TableCell key={column.id} align={column.align}>
-                              {column.format && typeof value === "string"
+                              {column.format && typeof value === 'string'
                                 ? column.format(value)
                                 : value}
                             </TableCell>
@@ -118,7 +118,7 @@ const TableComponent: React.FC<TableComponentProps> = ({
                               row._id && onDeleteClick(String(row._id));
                             }}
                           >
-                            <DeleteIcon />
+                            <DeleteIcon color="info" />
                           </Button>
                         </TableCell>
                       </TableRow>
