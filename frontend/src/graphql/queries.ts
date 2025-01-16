@@ -1,13 +1,14 @@
 import { gql } from "@apollo/client";
 
 export const GET_PROPERTIES = gql`
-  query getProperties {
-    properties {
+  query getProperties($sortOrder: SortingOrder, $filter: PropertyFilter) {
+    properties(sortOrder: $sortOrder, filter: $filter) {
       _id
       city
       street
       state
       zipCode
+      createdAt
     }
   }
 `;

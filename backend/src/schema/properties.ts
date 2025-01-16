@@ -1,4 +1,17 @@
 export const typeDefs = `
+
+  enum SortingOrder {
+    ASC
+    DESC
+  }
+
+  input PropertyFilter {
+      city: String
+      street: String
+      state: String
+      zipCode: String
+  }
+
   type WeatherData {
     temperature: Float
     weather_descriptions: [String]
@@ -13,10 +26,11 @@ export const typeDefs = `
     weatherData: WeatherData
     lat: Float
     long: Float
+    createdAt: String!
   }
 
   type Query {
-    properties: [Property]
+    properties(sortOrder: SortingOrder = ASC, filter: PropertyFilter): [Property]
     property(_id: ID!): Property
   }
 
@@ -24,5 +38,4 @@ export const typeDefs = `
     createProperty(city: String!, street: String!, state: String!, zipCode: String!): Property
     deleteProperty(_id: ID!): String
   }
-
 `;

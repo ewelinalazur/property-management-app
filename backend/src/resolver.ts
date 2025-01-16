@@ -5,9 +5,39 @@ const WEATHERSTACK_API_KEY = process.env.WEATHERSTACK_API_KEY;
 
 export const resolvers = {
   Query: {
-    properties: async () => {
+    properties: async (
+      _,
+      args: {
+        sortOrder?: string;
+        filter?: {
+          city?: string;
+          street?: string;
+          state?: string;
+          zipCode?: string;
+        };
+      }
+    ) => {
       try {
-        const result = await PropertyModel.find({});
+        const filterConditions: { [key: string]: any } = {};
+        const { sortOrder = "ASC", filter = {} } = args;
+
+        if (filter.city) {
+          filterConditions.city = { $regex: filter.city, $options: "i" };
+        }
+        if (filter.street) {
+          filterConditions.street = { $regex: filter.street, $options: "i" };
+        }
+        if (filter.state) {
+          filterConditions.state = { $regex: filter.state, $options: "i" };
+        }
+        if (filter.zipCode) {
+          filterConditions.zipCode = { $regex: filter.zipCode, $options: "i" };
+        }
+
+        const result = await PropertyModel.find(filterConditions).sort({
+          createdAt: sortOrder === "DESC" ? -1 : 1,
+        });
+
         if (!result.length) {
           throw new GraphQLError("No property Added!");
         }
@@ -49,10 +79,9 @@ export const resolvers = {
             "Failed to fetch weather data. Please check the location information."
           );
         }
-        console.log(weatherData);
+
         const { temperature, weather_descriptions } = weatherData.current || {};
         const { lat, lon: long } = weatherData.location || {};
-        // const createdAt = new Date().toISOString();
 
         const newProperty = await PropertyModel.create({
           city,
@@ -63,6 +92,7 @@ export const resolvers = {
           lat,
           long,
         });
+
         return newProperty;
       } catch (error) {
         throw new GraphQLError(`Failed to create property: ${error.message}`);

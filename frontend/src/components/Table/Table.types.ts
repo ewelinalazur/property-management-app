@@ -1,17 +1,21 @@
 export type TableData = Pick<
   Property,
-  "_id" | "city" | "street" | "state" | "zipCode"
+  "_id" | "city" | "street" | "state" | "zipCode" | "createdAt"
 >;
 export interface TableColumn {
-  id: "_id" | "city" | "street" | "state" | "zipCode";
+  id: "_id" | "city" | "street" | "state" | "zipCode" | "createdAt";
   label: string;
   minWidth?: number;
   align?: "right";
-  format?: (value: number) => string;
+  format?: (value: string) => string;
 }
 export interface TableComponentProps {
   rows: TableData[];
   columns: readonly TableColumn[];
+  loading: boolean;
+  error: Error | null;
+  onSortClick: () => void;
+  sortOrder: "ASC" | "DESC";
 }
 
 export interface WeatherData {
@@ -28,4 +32,5 @@ export interface Property {
   weatherData: WeatherData;
   lat: number;
   long: number;
+  createdAt: string;
 }
