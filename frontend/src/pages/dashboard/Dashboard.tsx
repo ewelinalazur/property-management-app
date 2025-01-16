@@ -2,7 +2,7 @@ import TableComponent from '../../components/Table/Table';
 import { Box, Button, TextField, Typography } from '@mui/material';
 import AddPropertySidebar from '../../components/AddPropertySidebar/AddPropertySidebar';
 import PropertyDetailsModal from '../../components/PropertyDetailsModal/PropertyDetailsModal';
-import DeleteConfirmDialog from '../../components/DeleteConfigDialog/DeleteConfigDialog';
+import DeleteConfirmDialog from '../../components/DeleteDialog/DeleteDialog';
 import usePropertyDashboard from '../../hooks/usePropertyDashboard';
 
 const PropertyDashboard = () => {

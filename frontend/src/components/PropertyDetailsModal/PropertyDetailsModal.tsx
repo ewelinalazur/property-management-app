@@ -48,6 +48,7 @@ const PropertyDetailsModal: React.FC<PropertyModalProps> = ({
 
         <Box sx={{ height: 300 }}>
           <MapComponent
+            key={`${property.lat}-${property.long}`}
             latitude={property.lat || 0}
             longitude={property.long || 0}
           />
