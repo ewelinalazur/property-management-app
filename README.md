@@ -3,24 +3,11 @@
 This is a recruitment task for the company **CoverTree**.
 This app helps you manage property with a slick UI and powerful backend, integrated with weather data.
 
-## Technologies
+## Tech Stack
 
-**Backend**:
+**Client:** React, TypeScript, Apollo Client, Material-UI, Leaflet (Maps)
 
-- Node.js
-- Apollo Server
-- GraphQL
-- Mongoose (MongoDB)
-- WeatherStack API
-- TypeScript
-
-  **Frontend**:
-
-- React
-- TypeScript
-- Apollo Client
-- Material-UI
-- Leaflet (Maps)
+**Server:** Node.js, Apollo Server, GraphQL, Mongoose (MongoDB), WeatherStack API, TypeScript
 
 ## Installation
 
@@ -83,8 +70,11 @@ The frontend will be available at http://localhost:3000. 🖥️
 Below are the required environment variables to run the application:
 
 `WEATHERSTACK_API_KEY`: Your WeatherStack API key.
+
 `MONGODB_URI`: The URI for your MongoDB database.
+
 `PORT`: The port number for the backend (default is 4000).
+
 Create a .env file in the backend folder and add the following variables:
 
 ```bash
