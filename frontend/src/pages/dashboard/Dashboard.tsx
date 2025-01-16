@@ -49,7 +49,10 @@ const PropertyDashboard = () => {
           mb: 2,
         }}
       >
-        <Box display="flex" flexWrap="wrap" gap={2} mb={2}>
+        <Box display="flex" flexWrap="wrap" gap={2}>
+          <Button variant="outlined" size="small" onClick={handleResetFilters}>
+            Reset
+          </Button>
           <TextField
             label="City"
             variant="outlined"
@@ -82,9 +85,6 @@ const PropertyDashboard = () => {
             size="small"
           />
         </Box>
-        <Button variant="contained" size="small" onClick={handleResetFilters}>
-          Reset
-        </Button>
       </Box>
       <TableComponent
         rows={data?.properties || []}

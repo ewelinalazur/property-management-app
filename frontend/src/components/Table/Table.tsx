@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState } from 'react';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -26,8 +26,8 @@ const TableComponent: React.FC<TableComponentProps> = ({
   onRowClick,
   onDeleteClick,
 }) => {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   if (loading) {
     return <CircularProgress />;
@@ -50,7 +50,7 @@ const TableComponent: React.FC<TableComponentProps> = ({
   return (
     <>
       <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-        <TableContainer sx={{ maxHeight: 440 }}>
+        <TableContainer sx={{ maxHeight: '60vh' }}>
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow>

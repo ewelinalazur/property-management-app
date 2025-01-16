@@ -1,10 +1,6 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
 import { Snackbar, Alert } from '@mui/material';
-
-interface NotificationContextProps {
-  showSuccess: (message: string) => void;
-  showError: (message: string) => void;
-}
+import { NotificationContextProps } from './NotificationContext.types';
 
 const NotificationContext = createContext<NotificationContextProps | undefined>(
   undefined,

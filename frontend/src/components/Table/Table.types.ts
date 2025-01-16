@@ -2,6 +2,7 @@ export type TableData = Pick<
   Property,
   '_id' | 'city' | 'street' | 'state' | 'zipCode' | 'createdAt'
 >;
+
 export interface TableColumn {
   id: '_id' | 'city' | 'street' | 'state' | 'zipCode' | 'createdAt';
   label: string;
@@ -9,6 +10,7 @@ export interface TableColumn {
   align?: 'right';
   format?: (value: string) => string;
 }
+
 export interface TableComponentProps {
   rows: TableData[];
   loading: boolean;

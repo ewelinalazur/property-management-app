@@ -1,5 +1,11 @@
 import { GraphQLError } from "graphql";
-import { Property as PropertyModel } from "./db/property.js";
+import { Property as PropertyModel } from "../db/property.model.js";
+import {
+  CreatePropertyMutationArgs,
+  DeletePropertyMutationArgs,
+  PropertiesQueryArgs,
+  PropertyResult,
+} from "../types.js";
 
 const WEATHERSTACK_API_KEY = process.env.WEATHERSTACK_API_KEY;
 
@@ -7,18 +13,15 @@ export const resolvers = {
   Query: {
     properties: async (
       _,
-      args: {
-        sortOrder?: string;
-        filter?: {
-          city?: string;
-          street?: string;
-          state?: string;
-          zipCode?: string;
-        };
-      }
-    ) => {
+      args: PropertiesQueryArgs
+    ): Promise<PropertyResult[]> => {
       try {
-        const filterConditions: { [key: string]: any } = {};
+        const filterConditions: {
+          city?: { $regex: string; $options: string };
+          street?: { $regex: string; $options: string };
+          state?: { $regex: string; $options: string };
+          zipCode?: { $regex: string; $options: string };
+        } = {};
         const { sortOrder = "ASC", filter = {} } = args;
 
         if (filter.city) {
@@ -39,18 +42,18 @@ export const resolvers = {
         });
 
         if (!result.length) {
-          throw new GraphQLError("No property Added!");
+          throw new GraphQLError("No properties found matching the filter!");
         }
         return result;
       } catch (error) {
-        throw error;
+        throw new GraphQLError(`Failed to fetch properties: ${error.message}`);
       }
     },
-    property: async (_, args) => {
+    property: async (_, args: { _id: string }): Promise<PropertyResult> => {
       try {
         const result = await PropertyModel.findById(args._id);
         if (!result) {
-          throw new GraphQLError("Property does not exist!");
+          throw new GraphQLError("Property not found!");
         }
         const location = `${result.city},${result.state},United States`;
 
@@ -58,17 +61,15 @@ export const resolvers = {
           `http://api.weatherstack.com/current?access_key=${WEATHERSTACK_API_KEY}&query=${location}`
         );
 
-        const weatherData = (await weatherResponse.json()) as {
-          error?: any;
-          current?: { temperature: number; weather_descriptions: string[] };
-          location?: { lat: number; lon: number };
-        };
-
-        if (weatherData.error) {
-          throw new Error(
+        if (!weatherResponse.ok) {
+          throw new GraphQLError(
             "Failed to fetch weather data. Please check the location information."
           );
         }
+        const weatherData = (await weatherResponse.json()) as {
+          current?: { temperature: number; weather_descriptions: string[] };
+          location?: { lat: number; lon: number };
+        };
 
         return {
           ...result.toObject(),
@@ -80,18 +81,21 @@ export const resolvers = {
           },
         };
       } catch (error) {
-        throw error;
+        throw new GraphQLError(`Failed to fetch property: ${error.message}`);
       }
     },
   },
   Mutation: {
-    createProperty: async (_, { city, street, state, zipCode }) => {
+    createProperty: async (
+      _: any,
+      args: CreatePropertyMutationArgs
+    ): Promise<PropertyResult> => {
       try {
         const newProperty = new PropertyModel({
-          city,
-          street,
-          state,
-          zipCode,
+          city: args.city,
+          street: args.street,
+          state: args.state,
+          zipCode: args.zipCode,
           lat: null,
           long: null,
           weatherData: {
@@ -106,15 +110,15 @@ export const resolvers = {
         throw new GraphQLError(`Failed to create property: ${error.message}`);
       }
     },
-    deleteProperty: async (_, args) => {
+    deleteProperty: async (_: any, args: DeletePropertyMutationArgs) => {
       try {
         const result = await PropertyModel.findByIdAndDelete(args._id);
         if (!result) {
           throw new GraphQLError(`Property with ID ${args._id} not found.`);
         }
-        return true;
+        return `Property with ID ${args._id} was successfully deleted.`;
       } catch (error) {
-        throw error;
+        throw new GraphQLError(`Failed to delete property: ${error.message}`);
       }
     },
   },
