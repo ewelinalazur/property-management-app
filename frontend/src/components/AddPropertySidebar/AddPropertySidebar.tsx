@@ -1,26 +1,16 @@
 import React, { useRef } from "react";
 import { Drawer, Box, Typography, Button, TextField } from "@mui/material";
-import { useMutation } from "@apollo/client";
-import { GET_PROPERTIES } from "../../graphql/queries";
-import { CREATE_PROPERTY } from "../../graphql/mutations";
-import { useNotification } from "../../context/NotificationContext";
+import { SidebarProps } from "./AddPropertySidebar.types";
 
-const Sidebar = ({
+const AddPropertySidebar: React.FC<SidebarProps> = ({
   open,
   handleClose,
-}: {
-  open: boolean;
-  handleClose: () => void;
+  createProperty,
 }) => {
   const inputCity = useRef<HTMLInputElement>(null);
   const inputStreet = useRef<HTMLInputElement>(null);
   const inputState = useRef<HTMLInputElement>(null);
   const inputZipCode = useRef<HTMLInputElement>(null);
-  const { showSuccess, showError } = useNotification();
-
-  const [createProperty] = useMutation(CREATE_PROPERTY, {
-    refetchQueries: [{ query: GET_PROPERTIES }],
-  });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,15 +21,7 @@ const Sidebar = ({
         state: inputState.current?.value,
         zipCode: inputZipCode.current?.value,
       },
-    })
-      .then(() => {
-        showSuccess("Property added successfully!");
-        handleClose();
-      })
-      .catch((error) => {
-        showError(`Error creating property: ${error.message}`);
-      });
-    handleClose();
+    });
   };
 
   return (
@@ -86,4 +68,4 @@ const Sidebar = ({
   );
 };
 
-export default Sidebar;
+export default AddPropertySidebar;

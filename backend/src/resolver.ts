@@ -50,20 +50,10 @@ export const resolvers = {
       try {
         const result = await PropertyModel.findById(args._id);
         if (!result) {
-          throw new GraphQLError("Property does not exists!");
+          throw new GraphQLError("Property does not exist!");
         }
-        return result;
-      } catch (error) {
-        throw error;
-      }
-    },
-  },
-  Mutation: {
-    createProperty: async (_, args) => {
-      try {
-        const { city, street, state, zipCode } = args;
-        const location = `${city},${state},United States`;
-        console.log(location);
+        const location = `${result.city},${result.state},United States`;
+
         const weatherResponse = await fetch(
           `http://api.weatherstack.com/current?access_key=${WEATHERSTACK_API_KEY}&query=${location}`
         );
@@ -80,25 +70,42 @@ export const resolvers = {
           );
         }
 
-        const { temperature, weather_descriptions } = weatherData.current || {};
-        const { lat, lon: long } = weatherData.location || {};
-
-        const newProperty = await PropertyModel.create({
+        return {
+          ...result.toObject(),
+          lat: weatherData.location.lat,
+          long: weatherData.location.lon,
+          weatherData: {
+            temperature: weatherData.current.temperature,
+            weather_descriptions: weatherData.current.weather_descriptions,
+          },
+        };
+      } catch (error) {
+        throw error;
+      }
+    },
+  },
+  Mutation: {
+    createProperty: async (_, { city, street, state, zipCode }) => {
+      try {
+        const newProperty = new PropertyModel({
           city,
           street,
           state,
           zipCode,
-          weatherData: { temperature, weather_descriptions },
-          lat,
-          long,
+          lat: null,
+          long: null,
+          weatherData: {
+            temperature: null,
+            weather_descriptions: [],
+          },
         });
 
+        await newProperty.save();
         return newProperty;
       } catch (error) {
         throw new GraphQLError(`Failed to create property: ${error.message}`);
       }
     },
-
     deleteProperty: async (_, args) => {
       try {
         const result = await PropertyModel.findByIdAndDelete(args._id);

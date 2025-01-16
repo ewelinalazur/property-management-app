@@ -11,11 +11,12 @@ export interface TableColumn {
 }
 export interface TableComponentProps {
   rows: TableData[];
-  columns: readonly TableColumn[];
   loading: boolean;
   error: Error | null;
-  onSortClick: () => void;
+  onSortClick?: () => void;
   sortOrder: "ASC" | "DESC";
+  onRowClick?: (id: string) => void;
+  onDeleteClick: (id: string) => void;
 }
 
 export interface WeatherData {

@@ -14,16 +14,20 @@ export const GET_PROPERTIES = gql`
 `;
 
 export const GET_PROPERTY = gql`
-  query getProperty($id: ID!) {
-    property(_id: $id) {
+  query getProperty($_id: ID!) {
+    property(_id: $_id) {
       _id
       city
       street
       state
       zipCode
-      weatherData
+      weatherData {
+        temperature
+        weather_descriptions
+      }
       lat
       long
+      createdAt
     }
   }
 `;

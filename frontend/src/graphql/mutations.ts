@@ -21,3 +21,8 @@ export const CREATE_PROPERTY = gql`
     }
   }
 `;
+export const DELETE_PROPERTY = gql`
+  mutation deleteProperty($id: ID!) {
+    deleteProperty(_id: $id)
+  }
+`;
